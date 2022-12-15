@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta Usuario</title>
+</head>
+<script>
+    function consultarUsuario() {
+        var metodo = "GET";
+        var porta = "usuario";
+        var body = undefined;
+
+        callApi(metodo, porta, body, function(data) {
+
+            loadUsuariosTabela(data);
+        });
+    }
+
+    function consultarUsuarioFiltro() {
+
+    const campoFiltroValorTela = document.querySelector("#campofiltro").false; 
+    const operadorFiltroTela = document.querySelector("#operadorfiltro").false; 
+    const valorFiltroTela = document.querySelector("#valorfiltro").false; 
+
+    $sSql = "SELECT * FROM tbusuario ORDER BY 1";
+
+        //var metodo = "POST";
+        //var porta = "consultausuariofiltro";
+
+        var body = {
+            campofiltro:campoFiltroValorTela,
+            operadorfiltro:operadorFiltroTela,
+            valorFiltro:valorFiltroTela
+        };
+
+        callApi(metodo, porta, body, function(data) {
+
+            loadUsuariosTabela(data);
+        });
+    }
+
+    function loadUsuariosTabela(data) {
+        const aDadosUsuarios = data;
+        let body = document.querySelector(".dados-tabela");
+
+        body.innerHTML = "";
+
+        aDadosUsuarios.forEach(function(oUsuario, key) {
+            const codigo = oUsuario.usucodigo;
+            const nome = oUsuario.usunome;
+            const email = oUsuario.usuemail;
+            let situacao = oUsuario.usuativo;
+
+            if (situacao == 1) {
+                situacao = "Ativo";
+            } else {
+                situacao = "Inativo";
+            }
+
+            debugger;
+            body.innerHTML += `<tr>
+                                    <td>` + codigo + `</td>
+                                    <td>` + nome + `</td>
+                                    <td>` + email + `</td>
+                                    <td>` + situacao + `</td>     
+                               </tr>`;
+        });
+    }
+</script>
+
+<body>
+    <hr>
+    <h1>Consulta de Usuarios</h1>
+
+    <div class="filtro-consulta">
+        <label for="campofiltro">Filtro:</label>
+        <select name="campofiltro" id="campofiltro">
+            <option value="usucodigo">CÃ³digo</option>
+            <option value="usunome">Nome</option>
+            <option value="usuemail">Email</option>
+        </select>
+        <select name="operadorfiltro" id="operadorfiltro">
+                <option value="todos">Todos</option>
+                <option value="maior">Maior que</option>
+                <option value="contem">ContÃ©m</option>
+                <option value="naocontem">NÃ£o ContÃ©m</option>
+                <option value="menorigual">Menor ou igual</option>
+                <option value="menor">Menor que</option>
+                <option value="maiorigual">Maior ou igual</option>
+                <option value="igual">Igual a</option>
+                <option value="diferente">Diferente de</option>
+        </select>
+
+        <input type="text" id="valorfiltro" name="valorfiltro" value="5">
+
+        <button onclick="consultarUsuarioFiltro()" class="button2">Consultar Filtros</button>
+    </div>
+    <button onclick="consultarUsuario()">Consultar Sem Filtros</button>
+    <hr>
+    <table border="1">
+        <thead>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th>Situação</th>
+        </thead>
+        <tbody class="dados-tabela">
+
+        </tbody>
+    </table>
+</body>
+
+<script src="js/api.js" defer></script>
+
+</html>
